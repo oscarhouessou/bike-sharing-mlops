@@ -1,0 +1,31 @@
+# Environnement virtuel (très lourd, ne jamais versionner)
+.venv/
+env/
+venv/
+ENV/
+
+# Python (fichiers compilés)
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Données (On laisse DVC s'en charger, Git ne doit pas les suivre)
+data/raw/
+data/processed/
+data/external/
+
+# Modèles (Fichiers lourds .pkl, .h5, etc. gérés par DVC ou MLflow)
+models/*
+!models/.gitkeep
+
+# Logs et tracking
+mlruns/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# OS (fichiers système inutiles)
+.DS_Store
+Thumbs.db
+
+# DVC (on ignore le cache local, mais on garde les fichiers de config)
+/data/.dvc
