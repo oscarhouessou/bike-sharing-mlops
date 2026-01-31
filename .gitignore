@@ -28,4 +28,5 @@ mlruns/
 Thumbs.db
 
 # DVC (on ignore le cache local, mais on garde les fichiers de config)
-/data/.dvc
+/data/.dvcmlruns/
+mlflow.db

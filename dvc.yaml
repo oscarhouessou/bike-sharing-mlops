@@ -7,3 +7,11 @@ stages:
     - src/preprocessing.py
     outs:
     - data/processed/features.csv
+  train:
+    cmd: python src/train.py
+    deps:
+    - config/config.yaml
+    - data/processed/features.csv
+    - src/train.py
+    outs:
+    - models/model.pkl
