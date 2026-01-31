@@ -1,0 +1,28 @@
+name: model-training
+on: [push]
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: iterative/setup-cml@v1
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      
+      - name: Train model
+        run: |
+          pip install -r requirements.txt
+          dvc repro  # DVC va tout recalculer sur la machine GitHub !
+          
+      - name: Write report
+        env:
+          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Générer un rapport automatique avec CML
+          echo "## Métriques du modèle" > report.md
+          echo "Voici les résultats du dernier entraînement :" >> report.md
+          # On peut même extraire les métriques de MLflow ici
+          echo "Entraînement terminé avec succès le $(date)" >> report.md
+          
+          cml send-comment report.md
