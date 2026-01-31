@@ -1,0 +1,9 @@
+stages:
+  prepare:
+    cmd: python src/preprocessing.py
+    deps:
+    - config/config.yaml
+    - data/raw/hour.csv
+    - src/preprocessing.py
+    outs:
+    - data/processed/features.csv
