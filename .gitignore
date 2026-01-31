@@ -1,32 +1,27 @@
-# Environnement virtuel (très lourd, ne jamais versionner)
+# Environnement virtuel
 .venv/
-env/
 venv/
-ENV/
 
-# Python (fichiers compilés)
+# Python
 __pycache__/
 *.py[cod]
-*$py.class
 
-# Données (On laisse DVC s'en charger, Git ne doit pas les suivre)
-data/raw/
-data/processed/
-data/external/
+# DONNÉES : On ignore les dossiers, mais PAS les fichiers .dvc
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+# On autorise explicitement les fichiers de tracking DVC
+!*.dvc
 
-# Modèles (Fichiers lourds .pkl, .h5, etc. gérés par DVC ou MLflow)
+# Modèles
 models/*
 !models/.gitkeep
 
-# Logs et tracking
+# MLflow & Logs
 mlruns/
-.pytest_cache/
-.ipynb_checkpoints/
-
-# OS (fichiers système inutiles)
-.DS_Store
-Thumbs.db
-
-# DVC (on ignore le cache local, mais on garde les fichiers de config)
-/data/.dvcmlruns/
 mlflow.db
+.pytest_cache/
+
+# OS
+.DS_Store
