@@ -3,6 +3,10 @@ on: [push]
 jobs:
   run:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      id-token: write
     steps:
       - uses: actions/checkout@v3
       - uses: iterative/setup-cml@v1
@@ -11,18 +15,34 @@ jobs:
           python-version: '3.11'
       
       - name: Train model
+        env:
+          GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
         run: |
-          pip install -r requirements.txt
-          dvc repro  # DVC va tout recalculer sur la machine GitHub !
+          pip install "dvc[gs]" -r requirements.txt
+          
+          # 1. Configurer la clé GCP localement pour ce run
+          echo "$GCP_SA_KEY" > provider_key.json
+          dvc remote modify storage --local credentialpath provider_key.json
+          
+          # 2. Récupérer les données et exécuter le pipeline
+          dvc pull
+          dvc repro
           
       - name: Write report
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          # Générer un rapport automatique avec CML
-          echo "## Métriques du modèle" > report.md
-          echo "Voici les résultats du dernier entraînement :" >> report.md
-          # On peut même extraire les métriques de MLflow ici
-          echo "Entraînement terminé avec succès le $(date)" >> report.md
+          echo "## 🚀 Rapport d'entraînement MLOps" > report.md
+          echo "Date : $(date)" >> report.md
+          
+          echo "### ✅ Métriques du modèle" >> report.md
+          # On récupère les métriques si tu as configuré dvc metrics, 
+          # sinon on peut lire directement le log de ton script
+          echo "Le modèle a été ré-entraîné avec succès sur la machine GitHub." >> report.md
+          
+          # Si tu veux ajouter un graphique généré par ton script :
+          # echo "### 📈 Visualisation" >> report.md
+          # echo "![](./path/to/plot.png)" >> report.md
           
           cml send-comment report.md
+          rm provider_key.json

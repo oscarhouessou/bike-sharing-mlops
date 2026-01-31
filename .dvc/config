@@ -1,2 +1,6 @@
 [core]
     autostage = true
+    remote = storage
+['remote "storage"']
+    url = gs://my-bike-mlops-data
+    credentialpath = ../key.json
