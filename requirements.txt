@@ -4,4 +4,4 @@ requests
 scikit-learn
 mlflow
 pyyaml
-dvcsrc  
+dvc
